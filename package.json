@@ -1,0 +1,76 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "description": "Laverna server",
+  "keywords": [
+    "express",
+    "socket",
+    "mongoose",
+    "jsonwebtoken"
+  ],
+  "license": "MPL-2.0",
+  "main": "server.js",
+  "homepage": "https://github.com/Laverna/server#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Laverna/server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Laverna/server/issues"
+  },
+  "scripts": {
+    "start": "nodemon ./server.js",
+    "debug": "cross-env NODE_ENV=development ./node_modules/.bin/nodemon --inspect ./server.js",
+    "test": "cross-env NODE_ENV=test node -r dotenv/config ./test/index.js | faucet",
+    "test:watch": "watch 'npm test'",
+    "cover": "nyc --reporter=lcov --require babel-register npm run test && nyc report",
+    "cover:check": "npm run cover && nyc check-coverage --lines 95 --functions 95 --branches 90",
+    "lint": "eslint -c ./.eslintrc.js {app,config,server.js}",
+    "jsdoc": "jsdoc {app,config,server.js} -r -d _dev/jsdoc"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "nyc": {
+    "report-dir": "_dev/cover",
+    "include": [
+      "app/**/*.js",
+      "config/**/*.js"
+    ]
+  },
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-preset-es2015": "^6.22.0",
+    "cross-env": "^3.2.3",
+    "eslint": "^3.17.1",
+    "faucet": "0.0.1",
+    "glob": "^7.1.1",
+    "jsdoc": "^3.4.3",
+    "nodemon": "^1.11.0",
+    "nyc": "^10.1.2",
+    "proxyquire": "^1.7.11",
+    "sinon": "^1.17.7",
+    "sinon-as-promised": "^4.0.2",
+    "sinon-mongoose": "^1.3.0",
+    "socket.io-client": "^1.7.3",
+    "supertest": "^3.0.0",
+    "tape": "^4.6.3",
+    "watch": "^1.0.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "deb": "^0.2.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.2",
+    "helmet": "^3.4.1",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.8.6",
+    "morgan": "^1.8.1",
+    "openpgp": "^2.4.0",
+    "socket.io": "^1.7.3",
+    "underscore": "^1.8.3",
+    "validator": "^7.0.0"
+  }
+}
