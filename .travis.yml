@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+    - 7
+    - 'stable'
+before_install:
+    - npm install -g coveralls
+install:
+    - npm install
+script:
+    - npm run lint
+    - npm run cover:check
+after_success:
+    - cat ./_dev/cover/lcov.info | coveralls
