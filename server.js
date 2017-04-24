@@ -7,7 +7,7 @@ require('dotenv').config();
 const express  = require('express');
 const mongoose = require('mongoose');
 const deb      = require('debug');
-const http     = require('http');
+const http     = require('./http');
 const config   = require('./config');
 
 const log        = deb('lav:server');
