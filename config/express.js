@@ -2,7 +2,6 @@
 /**
  * Express.js configs.
  *
- * @todo properly configure access control with .env
  * @file
  * @license MPL-2.0
  */
@@ -10,26 +9,29 @@
 const logger     = require('morgan');
 const bodyParser = require('body-parser');
 const helmet     = require('helmet');
+const cors       = require('cors');
 
 module.exports = ({app}) => {
     // Security
     app.use(helmet({
+        hidePoweredBy      : true,
         // Prevent any website from putting the website in a frame
-        frameguard: {
-            action: 'deny',
+        frameguard         : {
+            action         : 'deny',
+        },
+        // Content-security-policy
+        csp                : {
+            /* eslint-disable quotes */
+            directives     : {
+                defaultSrc : ["'self'"],
+                objectSrc  : ["'none'"],
+            },
+            /* eslint-enable quotes */
         },
     }));
 
-    app.use((req, res, next) => {
-        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000');
-        res.setHeader(
-            'Access-Control-Allow-Methods',
-            'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-        );
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-        res.setHeader('Access-Control-Allow-Credentials', true);
-        next();
-    });
+    // Enable CORS
+    app.use(cors());
 
     // Logging
     app.use(logger('dev'));
