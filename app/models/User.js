@@ -87,7 +87,10 @@ userSchema.static({
             }
 
             const payload = {sessionTokenFor: username};
-            return jwt.sign(payload, jwtSecret, {expiresIn: '8m'});
+            return jwt.sign(payload, jwtSecret, {
+                expiresIn : '8m',
+                algorithm : 'HS256',
+            });
         });
     },
 
@@ -228,7 +231,10 @@ userSchema.method({
             }
 
             const payload = {loggedInAs: this.username};
-            return jwt.sign(payload, jwtSecret, {expiresIn: '24h'});
+            return jwt.sign(payload, jwtSecret, {
+                expiresIn : '24h',
+                algorithm : 'HS256',
+            });
         });
     },
 
@@ -252,8 +258,10 @@ userSchema.method({
      * is successful
      */
     verifyToken(token) {
+        const options = {algorithms: ['HS256']};
+
         return new Promise(resolve => {
-            jwt.verify(token, jwtSecret, (err, decoded) => {
+            jwt.verify(token, jwtSecret, options, (err, decoded) => {
                 if (err) {
                     return resolve(false);
                 }
