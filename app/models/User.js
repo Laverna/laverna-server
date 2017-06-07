@@ -58,8 +58,9 @@ userSchema.static({
      * @returns {Promise}
      */
     findByName({username}) {
+        const name = username.toLowerCase();
         log(`checking ${username}`);
-        return this.findOne({username}).exec();
+        return this.findOne({username: name}).exec();
     },
 
     /**
@@ -86,7 +87,7 @@ userSchema.static({
                 return false;
             }
 
-            const payload = {sessionTokenFor: username};
+            const payload = {sessionTokenFor: user.username};
             return jwt.sign(payload, jwtSecret, {
                 expiresIn : '8m',
                 algorithm : 'HS256',
@@ -137,6 +138,7 @@ userSchema.method({
      */
     register() {
         try {
+            this.username    = this.username.toLowerCase();
             const key        = this.readKey();
             this.fingerprint = key.primaryKey.fingerprint;
         }
@@ -281,13 +283,15 @@ userSchema.method({
      * @returns {Promise}
      */
     addInvite(data) {
-        if (_.findWhere(this.pendingInvites, {username: data.username})) {
+        const username = data.username.toLowerCase();
+
+        if (_.findWhere(this.pendingInvites, {username})) {
             log('found the invite!');
             return Promise.resolve();
         }
 
         log('did not find the invite');
-        this.pendingInvites.push(data);
+        this.pendingInvites.push(_.extend({}, data, {username}));
         this.markModified('pendingInvites');
         return this.save();
     },
@@ -300,12 +304,13 @@ userSchema.method({
      * @returns {Promise}
      */
     removeInvite(data) {
-        if (!_.findWhere(this.pendingInvites, {username: data.username})) {
+        const username = data.username.toLowerCase();
+        if (!_.findWhere(this.pendingInvites, {username})) {
             return Promise.resolve();
         }
 
         this.pendingInvites = _.filter(this.pendingInvites, invite => {
-            return invite.username !== data.username;
+            return invite.username !== username;
         });
         this.markModified('pendingInvites');
         return this.save();
