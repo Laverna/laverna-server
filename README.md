@@ -26,7 +26,10 @@ cd server
 $ npm install
 ```
 
-3. Start the server
+3. Configure the signal server
+Copy .env.example to .env and change configs in the new file.
+
+4. Start the server
 
 ```bash
 $ npm start
