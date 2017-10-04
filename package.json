@@ -10,18 +10,18 @@
   ],
   "license": "MPL-2.0",
   "main": "server.js",
-  "homepage": "https://github.com/Laverna/server#readme",
+  "homepage": "https://github.com/Laverna/lavera-server#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Laverna/server.git"
+    "url": "https://github.com/Laverna/laverna-server.git"
   },
   "bugs": {
-    "url": "https://github.com/Laverna/server/issues"
+    "url": "https://github.com/Laverna/laverna-server/issues"
   },
   "scripts": {
     "start": "nodemon ./server.js",
     "debug": "cross-env NODE_ENV=development ./node_modules/.bin/nodemon --inspect ./server.js",
-    "test": "cross-env NODE_ENV=test node -r dotenv/config ./test/index.js | faucet",
+    "test": "cross-env NODE_ENV=test node -r dotenv/config test/index.js | faucet",
     "test:watch": "watch 'npm test'",
     "cover": "nyc --reporter=lcov --require babel-register npm run test && nyc report",
     "cover:check": "npm run cover && nyc check-coverage --lines 95 --functions 95 --branches 90",
@@ -41,37 +41,37 @@
     ]
   },
   "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-preset-es2015": "^6.22.0",
-    "cross-env": "^3.2.3",
-    "eslint": "^3.17.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "cross-env": "^5.0.5",
+    "eslint": "^4.8.0",
     "faucet": "0.0.1",
-    "glob": "^7.1.1",
-    "jsdoc": "^3.4.3",
-    "nodemon": "^1.11.0",
-    "nyc": "^10.1.2",
-    "proxyquire": "^1.7.11",
-    "sinon": "^1.17.7",
-    "sinon-as-promised": "^4.0.2",
-    "sinon-mongoose": "^1.3.0",
-    "socket.io-client": "^1.7.3",
+    "glob": "^7.1.2",
+    "jsdoc": "^3.5.5",
+    "nodemon": "^1.12.1",
+    "nyc": "^11.2.1",
+    "proxyquire": "^1.8.0",
+    "sinon": "^4.0.0",
+    "sinon-as-promised": "^4.0.3",
+    "sinon-mongoose": "^2.0.2",
+    "socket.io-client": "^2.0.3",
     "supertest": "^3.0.0",
-    "tape": "^4.6.3",
+    "tape": "^4.8.0",
     "watch": "^1.0.2"
   },
   "dependencies": {
-    "body-parser": "^1.17.1",
-    "cors": "^2.8.3",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
     "deb": "^0.2.1",
     "dotenv": "^4.0.0",
-    "express": "^4.15.2",
-    "helmet": "^3.5.0",
-    "jsonwebtoken": "^7.3.0",
-    "mongoose": "^4.8.6",
-    "morgan": "^1.8.1",
-    "openpgp": "^2.4.0",
-    "socket.io": "^1.7.3",
+    "express": "^4.16.1",
+    "helmet": "^3.8.2",
+    "jsonwebtoken": "^8.0.1",
+    "mongoose": "^4.12.0",
+    "morgan": "^1.9.0",
+    "openpgp": "^2.5.11",
+    "socket.io": "^2.0.3",
     "underscore": "^1.8.3",
-    "validator": "^7.0.0"
+    "validator": "^9.0.0"
   }
 }
