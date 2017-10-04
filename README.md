@@ -9,6 +9,13 @@
 [![Code Climate](https://codeclimate.com/github/Laverna/laverna-server/badges/gpa.svg)](https://codeclimate.com/github/Laverna/laverna-server)
 
 
+## Dependencies
+
+1. [Git](https://git-scm.com/book/en/v2)
+2. [Node.js](http://nodejs.org/)
+3. [MongoDB](https://docs.mongodb.com/manual/installation/)
+
+
 ## Installation
 ---------------
 
