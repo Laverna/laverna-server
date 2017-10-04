@@ -2,7 +2,7 @@
 
 module.exports = {
     'env': {
-        'browser'  : false,
+        'browser'  : true,
         'commonjs' : true,
         'es6'      : true,
         'node'     : true,
@@ -17,7 +17,7 @@ module.exports = {
     'rules': {
 
         // Coding Style
-        'indent'                   : [2, 4, {'SwitchCase': 1}],
+        'indent'                   : [2, 4, {'SwitchCase': 1, 'MemberExpression': 0}],
         'linebreak-style'          : [2, 'unix'],
         'quotes'                   : [2, 'single'],
         'semi'                     : [2, 'always'],
@@ -94,5 +94,6 @@ module.exports = {
     },
 
     'globals': {
+        $: false,
     },
 };
