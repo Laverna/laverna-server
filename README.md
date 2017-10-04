@@ -4,8 +4,8 @@
 [IRC](https://webchat.freenode.net/?channels=laverna) |
 [Gitter Chat](https://gitter.im/Laverna/laverna)
 
-[![Build Status](https://travis-ci.org/Laverna/laverna-server.svg?branch=dev)](https://travis-ci.org/Laverna/laverna-server)
-[![Coverage Status](https://coveralls.io/repos/github/Laverna/laverna-server/badge.svg?branch=dev)](https://coveralls.io/github/Laverna/laverna-server)
+[![Build Status](https://travis-ci.org/Laverna/laverna-server.svg?branch=master)](https://travis-ci.org/Laverna/laverna-server)
+[![Coverage Status](https://coveralls.io/repos/github/Laverna/laverna-server/badge.svg?branch=master)](https://coveralls.io/github/Laverna/laverna-server)
 [![Code Climate](https://codeclimate.com/github/Laverna/laverna-server/badges/gpa.svg)](https://codeclimate.com/github/Laverna/laverna-server)
 
 
