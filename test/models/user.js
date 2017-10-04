@@ -6,7 +6,6 @@ const sinon   = require('sinon');
 const jwt     = require('jsonwebtoken');
 const openpgp = require('openpgp');
 require('sinon-mongoose');
-require('sinon-as-promised');
 
 const {schema, Model} = require('../../app/models/User');
 const {generateKey}   = require('../util');

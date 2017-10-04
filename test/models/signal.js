@@ -8,7 +8,6 @@ const openpgp = require('openpgp');
 const Signal  = require('../../app/models/Signal');
 
 require('../../server');
-require('sinon-as-promised');
 
 const {Model}   = require('../../app/models/User');
 const {cleanup} = require('../util');
