@@ -291,7 +291,8 @@ userSchema.method({
         }
 
         log('did not find the invite');
-        this.pendingInvites.push(_.extend({}, data, {username}));
+        const sData         = _.extend({}, data, {username});
+        this.pendingInvites = this.pendingInvites.concat([sData]);
         this.markModified('pendingInvites');
         return this.save();
     },

@@ -10,11 +10,11 @@ const deb      = require('debug');
 const http     = require('./http');
 const config   = require('./config');
 
+deb.enable('lav:server');
 const log        = deb('lav:server');
 const app        = express();
 const server     = http.createServer(app);
 const port       = process.env.PORT || 3000;
-mongoose.Promise = global.Promise;
 
 // Enable logging
 if (process.env.NODE_ENV === 'development') {
@@ -41,7 +41,7 @@ require('./config/socket')(data);
  */
 function connect() {
     log('connecting to mongodb...');
-    return mongoose.connect(config.db, config.dbOptions).connection;
+    return mongoose.connect(config.db, config.dbOptions);
 }
 
 /**
@@ -57,8 +57,7 @@ function listen() {
 }
 
 connect()
-.on('error', log)
-.on('disconnected', connect)
-.once('open', listen);
+.then(listen)
+.catch(log);
 
 module.exports = {app, server};

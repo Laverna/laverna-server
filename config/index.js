@@ -14,8 +14,14 @@ const {DB_USER, DB_PASS} = env;
 module.exports = {
     db         : `mongodb://${dbHost}/${dbName}`,
     dbOptions  : {
-        config : {autoIndex: true},
-        user   : DB_USER,
-        pass   : DB_PASS,
+        bufferCommands    : false,
+        bufferMaxEntries  : 0,
+        promiseLibrary    : global.Promise,
+        autoReconnect     : true,
+        reconnectInterval : 500,
+        connectTimeoutMS  : 1000,
+        autoIndex         : true,
+        user              : DB_USER,
+        pass              : DB_PASS,
     },
 };
