@@ -38,13 +38,13 @@ module.exports.auth = (req, res) => {
             return res.json({success: false, message: 'Wrong fingerprint'});
         }
 
-        return user.authenticate({signature});
-    })
-    .then(token => {
-        if (!token) {
-            return res.json({success: false, message: 'Invalid signature'});
-        }
+        return user.authenticate({signature})
+        .then(token => {
+            if (!token) {
+                return res.json({success: false, message: 'Invalid signature'});
+            }
 
-        return res.json({success: true, token});
+            return res.json({success: true, token});
+        });
     });
 };
