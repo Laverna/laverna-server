@@ -1,4 +1,5 @@
 language: node_js
+services: mongodb
 node_js:
     - 7
     - 'stable'
@@ -7,6 +8,8 @@ before_install:
 install:
     - npm install
 script:
+    - cp .env.example .env
+    - sed -i 's/JWT_SECRET=/JWT_SECRET=test/g' .env
     - npm run lint
     - npm run cover:check
 after_success:
