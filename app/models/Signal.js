@@ -1,8 +1,8 @@
 'use strict';
 
-const log  = require('debug')('lav:app/models/Signal');
-const User = require('./User').Model;
-const _    = require('underscore');
+const log   = require('debug')('lav:app/models/Signal');
+const User  = require('./User').Model;
+const _     = require('underscore');
 
 /**
  * Signaling server logic.
@@ -85,7 +85,7 @@ class Signal {
     }
 
     onDisconnect() {
-        log('disconnected');
+        log(`disconnected ${this.mySocketRoom}`);
     }
 
     /**
@@ -104,18 +104,22 @@ class Signal {
      * @param {String} username
      * @param {String} signature
      */
-    sendInvite({username, signature}) {
+    async sendInvite({username, signature}) {
         if (username === this.user.username) {
             return Promise.resolve();
         }
 
         const data = _.extend({signature}, this.user.getPublicData());
+        const user = await User.findByName({username});
 
         log('sending an invite');
-        return User.findByName({username})
-        .then(user => user.addInvite(data))
-        .then(()   => this.io.to(username).emit('invite', data))
-        .catch(err => log('error', err));
+        try {
+            await user.addInvite(data);
+            this.io.to(username).emit('invite', data);
+        }
+        catch (err) {
+            log('error', err);
+        }
     }
 
     /**
@@ -136,7 +140,7 @@ class Signal {
      * @param {Array} users
      */
     requestOffers({users}) {
-        log('requesting offers...');
+        log(`${this.mySocketRoom}: requesting offers...`);
         users.forEach(user => {
             this.io.to(user).emit('requestOffer', {
                 username : this.user.username,
@@ -152,23 +156,38 @@ class Signal {
      * @param {String} deviceId
      */
     sendOffer({username, deviceId}) {
-        log('sending offer...', username, deviceId);
+        log(`sending offer from ${this.mySocketRoom} to ${username}@${deviceId}`);
+        const me = {username: this.user.username, deviceId: this.deviceId};
+        this.sendOffers({username, deviceId}, me);
+    }
 
-        this.io.to(`${username}@${deviceId}`).emit('offer', {
-            username : this.user.username,
-            deviceId : this.deviceId,
+    /**
+     * Send peer connection offers to users.
+     *
+     * @param {Object} user1 - The user who is receiving the offer
+     * @param {Object} user2 - The initiating user
+     */
+    sendOffers(user1, user2) {
+        this.io.to(`${user1.username}@${user1.deviceId}`).emit('offer', {
+            user: user2,
+            initiator: false,
+        });
+
+        this.io.to(`${user2.username}@${user2.deviceId}`).emit('offer', {
+            user: user1,
+            initiator: true,
         });
     }
 
     /**
-     * Send signal informatin to another peer.
+     * Send signal information to another peer.
      *
      * @param {Object} signal
      * @param {String} signature
      * @param {Object} to
      */
     sendSignal({signal, signature, to}) {
-        log(`sending signal data to ${to.username}...`, typeof signal);
+        log(`sending signal data to ${to.username}@${to.deviceId}...`);
 
         this.io.to(`${to.username}@${to.deviceId}`)
         .emit('signal', {

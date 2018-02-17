@@ -179,15 +179,23 @@ test('models/Signal: requestOffers()', t => {
 
 test('models/Signal: sendOffer()', t => {
     const signal = new Signal({socket, io, user});
-    signal.sendOffer({username: 'sendOfferUser', deviceId: 'my-device'});
+    signal.sendOffer({username: 'bob', deviceId: 'my-device'});
 
-    t.equal(io.to.calledWith('sendOfferUser@my-device'), true,
+    t.equal(io.to.calledWith('bob@my-device'), true,
         'sends an offer to the channel named after the users name and device');
 
-    t.equal(emit.calledWith('offer', {
-        username: 'alice',
-        deviceId: 'my-device-id',
-    }), true, 'emits "offer"');
+    t.equal(io.to.calledWith(`alice@my-device-id`), true,
+        'sends an offer to the channel named after the users name and device');
+
+    t.equal(emit.calledWithMatch('offer', {
+        user: {username: user.username, deviceId: 'my-device-id'},
+        initiator : false,
+    }), true, 'the receiving offer user is not the initiator');
+
+    t.equal(emit.calledWithMatch('offer', {
+        user      : {username: 'bob', deviceId: 'my-device'},
+        initiator : true,
+    }), true, 'the user who is sending the offer becomes the initiator');
 
     t.end();
 });
