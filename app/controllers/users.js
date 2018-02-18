@@ -25,18 +25,18 @@ function respondUser(res, user) {
  * Find a user by name.
  * Available at /api/users/name/:username
  */
-module.exports.findByName = (req, res) => {
-    User.findByName({username: req.params.username})
-    .then(user => respondUser(res, user));
+module.exports.findByName = async (req, res) => {
+    const user = await User.findByName({username: req.params.username});
+    respondUser(res, user);
 };
 
 /**
  * Find a user by fingerprint.
  * Available at /api/users/fingerprint/:fingerprint
  */
-module.exports.findByFingerprint = (req, res) => {
-    User.findByFingerprint({fingerprint: req.params.fingerprint})
-    .then(user => respondUser(res, user));
+module.exports.findByFingerprint = async (req, res) => {
+    const user = await User.findByFingerprint({fingerprint: req.params.fingerprint});
+    respondUser(res, user);
 };
 
 /**
@@ -44,14 +44,16 @@ module.exports.findByFingerprint = (req, res) => {
  * You should provide username and publicKey.
  * Available at /api/users
  */
-module.exports.create = (req, res) => {
+module.exports.create = async (req, res) => {
     const data = _.pick(req.body, 'username', 'publicKey');
     const user = new User(data);
 
-    user.register()
-    .then(()   => res.json({message: 'Registered a new user.'}))
-    .catch(err => {
+    try {
+        await user.register();
+        res.json({message: 'Registered a new user.'});
+    }
+    catch (err) {
         log('error', err);
         res.status(400).send(err.message);
-    });
+    }
 };

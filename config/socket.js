@@ -13,16 +13,15 @@ const auth     = require('./middlewares/socketAuth');
 
 module.exports = ({server}) => {
     const io = socketIo(server);
+    const connected = [];
 
     // Use authentication middleware
     io.use(auth);
 
-    io.on('connection', socket => {
+    io.on('connection', async socket => {
         log(`connected ${socket.handshake.query.username}`);
 
-        User.findByName({username: socket.handshake.query.username})
-        .then(user => {
-            new Signal({socket, io, user});
-        });
+        const user = await User.findByName({username: socket.handshake.query.username});
+        new Signal({socket, io, user, connected});
     });
 };

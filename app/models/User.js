@@ -80,18 +80,16 @@ userSchema.static({
      * @param {String} username
      * @returns {String|Boolean} - false if user does not exist
      */
-    getSessionToken({username}) {
-        return this.findByName({username})
-        .then(user => {
-            if (!user) {
-                return false;
-            }
+    async getSessionToken({username}) {
+        const user = await this.findByName({username});
+        if (!user) {
+            return false;
+        }
 
-            const payload = {sessionTokenFor: user.username};
-            return jwt.sign(payload, jwtSecret, {
-                expiresIn : '8m',
-                algorithm : 'HS256',
-            });
+        const payload = {sessionTokenFor: user.username};
+        return jwt.sign(payload, jwtSecret, {
+            expiresIn : '8m',
+            algorithm : 'HS256',
         });
     },
 
@@ -102,15 +100,13 @@ userSchema.static({
      * @param {String} token
      * @returns {Promise}
      */
-    authToken({username, token}) {
-        return this.findByName({username})
-        .then(user => {
-            if (!user) {
-                return false;
-            }
+    async authToken({username, token}) {
+        const user = await this.findByName({username});
+        if (!user) {
+            return false;
+        }
 
-            return user.verifyAuthToken(token);
-        });
+        return user.verifyAuthToken(token);
     },
 
 });
@@ -172,7 +168,7 @@ userSchema.method({
      * @param {String} signature
      * @returns {Promise} returns false or the message that was signed
      */
-    checkSignature({signature}) {
+    async checkSignature({signature}) {
         let message;
 
         try {
@@ -183,15 +179,13 @@ userSchema.method({
         }
 
         const publicKeys = this.readKey();
+        const res = await openpgp.verify({message, publicKeys});
 
-        return openpgp.verify({message, publicKeys})
-        .then(res => {
-            if (!res.signatures[0].valid) {
-                return false;
-            }
+        if (!res.signatures[0].valid) {
+            return false;
+        }
 
-            return res.data;
-        });
+        return res.data;
     },
 
     /**
@@ -201,21 +195,19 @@ userSchema.method({
      * @param {String} sid - Session ID
      * @returns {Promise} - returns false or auth token
      */
-    authenticate({signature}) {
-        return this.checkSignature({signature})
-        .then(res => {
-            if (!res) {
-                return false;
-            }
+    async authenticate({signature}) {
+        const res = await this.checkSignature({signature});
+        if (!res) {
+            return false;
+        }
 
-            const data = JSON.parse(res);
-            if (data.username !== this.username || data.msg !== 'SIGNAL_AUTH_REQUEST') {
-                return false;
-            }
+        const data = JSON.parse(res);
+        if (data.username !== this.username || data.msg !== 'SIGNAL_AUTH_REQUEST') {
+            return false;
+        }
 
-            // Verify the session token and generate an auth token
-            return this.generateAuthToken(data.sessionToken);
-        });
+        // Verify the session token and generate an auth token
+        return this.generateAuthToken(data.sessionToken);
     },
 
     /**
@@ -225,18 +217,16 @@ userSchema.method({
      * @param {String} sessionToken
      * @returns {Promise}
      */
-    generateAuthToken(sessionToken) {
-        return this.verifyToken(sessionToken)
-        .then(decoded => {
-            if (!decoded || decoded.sessionTokenFor !== this.username) {
-                return false;
-            }
+    async generateAuthToken(sessionToken) {
+        const decoded = await this.verifyToken(sessionToken);
+        if (!decoded || decoded.sessionTokenFor !== this.username) {
+            return false;
+        }
 
-            const payload = {loggedInAs: this.username};
-            return jwt.sign(payload, jwtSecret, {
-                expiresIn : '24h',
-                algorithm : 'HS256',
-            });
+        const payload = {loggedInAs: this.username};
+        return jwt.sign(payload, jwtSecret, {
+            expiresIn : '24h',
+            algorithm : 'HS256',
         });
     },
 
@@ -245,11 +235,9 @@ userSchema.method({
      *
      * @param {String} token
      */
-    verifyAuthToken(token) {
-        return this.verifyToken(token)
-        .then(decoded => {
-            return (decoded && decoded.loggedInAs === this.username);
-        });
+    async verifyAuthToken(token) {
+        const decoded = await this.verifyToken(token);
+        return (decoded && decoded.loggedInAs === this.username);
     },
 
     /**
