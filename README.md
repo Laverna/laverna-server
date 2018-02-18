@@ -12,7 +12,7 @@
 ## Dependencies
 
 1. [Git](https://git-scm.com/book/en/v2)
-2. [Node.js](http://nodejs.org/)
+2. [Node.js](http://nodejs.org/) v8 or higher
 3. [MongoDB](https://docs.mongodb.com/manual/installation/)
 
 
